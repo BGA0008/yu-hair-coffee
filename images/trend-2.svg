@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none" stroke="#6b7355" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="600" height="600" fill="#dfe3cd" stroke="none"/>
+  <circle cx="300" cy="300" r="250" fill="#fbfaf4" stroke="none"/>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -8;0 0" dur="4.4s" repeatCount="indefinite"/>
+    <path d="M110 640Q120 510 220 480L380 480Q480 510 490 640Z" fill="#e9d3a8"/>
+    <rect x="268" y="390" width="64" height="100" rx="22" fill="#f6e3cf"/>
+    <path d="M192 250C192 120 250 88 300 88C350 88 408 120 408 250L408 388L192 388Z" fill="#8c6a4a"/>
+    <ellipse cx="300" cy="300" rx="85" ry="105" fill="#f6e3cf"/>
+    <path d="M206 222C206 142 254 116 300 116C346 116 394 142 394 222Z" fill="#8c6a4a"/>
+    <path d="M250 140c20-10 50-10 74 0M214 300v70M386 300v70" stroke="#b18b64" stroke-width="5"/>
+  </g>
+  <g stroke="#6b7355" stroke-width="5"><path d="M495 110v26M482 123h26"><animate attributeName="opacity" values="1;.2;1" dur="2.4s" repeatCount="indefinite"/></path><path d="M100 470v22M89 481h22"><animate attributeName="opacity" values=".2;1;.2" dur="2.4s" repeatCount="indefinite"/></path></g>
+</svg>
