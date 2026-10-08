@@ -26,6 +26,7 @@
   <nav class="nav" id="nav">
     <a href="#works">作品集</a>
     <a href="#trends">流行趨勢</a>
+    <a href="#tryon">髮色試色</a>
     <a href="#services">服務價目</a>
     <a href="#about">關於設計師</a>
     <a href="#coffee">咖啡空間</a>
@@ -80,6 +81,47 @@
       <figure><span style="background:#b5532c"></span><figcaption>金屬銅橘</figcaption></figure>
     </div>
     <p class="note">髮型示意照片來自 Unsplash（攝影師：<a href="https://unsplash.com/photos/a-woman-with-a-white-shirt-yfyaCInaKIU" target="_blank" rel="noopener">Young Shih</a>、<a href="https://unsplash.com/photos/a-woman-with-a-black-bag-standing-in-front-of-a-gray-wall-URjyAP0qOwA" target="_blank" rel="noopener">Dynamic Wang</a>、<a href="https://unsplash.com/photos/young-woman-smiling-in-a-cafe-with-plants-FXX2BeiSHyw" target="_blank" rel="noopener">Roni Darmanto</a>、<a href="https://unsplash.com/photos/man-near-plants-at-daytime-hdzBDVVsRT4" target="_blank" rel="noopener">Rohan G</a>），非本店作品。趨勢整理自 2026 年美髮媒體報導，更多靈感可參考 <a href="https://www.beauty321.com/series/205" target="_blank" rel="noopener">BEAUTY 美人圈 2026 髮型趨勢</a>；實際適合的款式與顏色，歡迎預約現場諮詢。</p>
+  </section>
+
+  <section id="tryon" class="section">
+    <h2>髮色試色</h2>
+    <p class="sub">拍一張自拍或選一張照片，點選顏色就能預覽新髮色。照片只在你的手機或電腦上處理，<strong>不會上傳，也不會儲存</strong>。</p>
+    <div class="tryon">
+      <div class="tryon-stage">
+        <canvas id="tryon-canvas" hidden aria-label="髮色預覽"></canvas>
+        <div class="tryon-empty" id="tryon-empty">
+          <p>請先拍照或選擇一張<br>正面、光線充足的照片</p>
+        </div>
+        <p class="tryon-status" id="tryon-status" role="status" aria-live="polite"></p>
+      </div>
+      <div class="tryon-panel">
+        <div class="tryon-actions">
+          <button type="button" class="btn" id="tryon-selfie-btn">自拍</button>
+          <button type="button" class="btn btn-ghost" id="tryon-pick-btn">選擇照片</button>
+          <input type="file" id="tryon-selfie" accept="image/*" capture="user" hidden>
+          <input type="file" id="tryon-pick" accept="image/*" hidden>
+        </div>
+        <div class="tryon-controls" id="tryon-controls" hidden>
+          <h3>選擇髮色</h3>
+          <div class="swatch-row">
+            <button type="button" class="swatch-btn" style="--c:#3b2418" data-color="#3b2418" aria-pressed="true" title="濃縮咖啡棕"><span>濃縮咖啡棕</span></button>
+            <button type="button" class="swatch-btn" style="--c:#5a2a3c" data-color="#5a2a3c" aria-pressed="false" title="酒紅／梅子"><span>酒紅／梅子</span></button>
+            <button type="button" class="swatch-btn" style="--c:#c9a06a" data-color="#c9a06a" aria-pressed="false" title="奶油蜂蜜金"><span>奶油蜂蜜金</span></button>
+            <button type="button" class="swatch-btn" style="--c:#a8683a" data-color="#a8683a" aria-pressed="false" title="暖栗焦糖"><span>暖栗焦糖</span></button>
+            <button type="button" class="swatch-btn" style="--c:#e4dccb" data-color="#e4dccb" aria-pressed="false" title="霜感冷金"><span>霜感冷金</span></button>
+            <button type="button" class="swatch-btn" style="--c:#b5532c" data-color="#b5532c" aria-pressed="false" title="金屬銅橘"><span>金屬銅橘</span></button>
+            <button type="button" class="swatch-btn" style="--c:#6b5d52" data-color="#6b5d52" aria-pressed="false" title="霧灰棕"><span>霧灰棕</span></button>
+            <button type="button" class="swatch-btn" style="--c:#a0615f" data-color="#a0615f" aria-pressed="false" title="玫瑰粉棕"><span>玫瑰粉棕</span></button>
+            <button type="button" class="swatch-btn" style="--c:#6e6a45" data-color="#6e6a45" aria-pressed="false" title="橄欖綠棕"><span>橄欖綠棕</span></button>
+            <button type="button" class="swatch-btn" style="--c:#5f6f80" data-color="#5f6f80" aria-pressed="false" title="霧藍灰"><span>霧藍灰</span></button>
+          </div>
+          <label class="tryon-row">自訂顏色 <input type="color" id="tryon-custom" value="#3b2418"></label>
+          <label class="tryon-row">顏色濃淡 <input type="range" id="tryon-strength" min="10" max="100" value="80"> <output id="tryon-strength-val">80%</output></label>
+          <button type="button" class="btn btn-ghost" id="tryon-save">儲存這張預覽圖</button>
+        </div>
+        <p class="note">模擬效果僅供參考：實際染出來的顏色會受原本髮色、髮質和染劑影響，請以現場諮詢為準。頭髮辨識使用 Google MediaPipe。</p>
+      </div>
+    </div>
   </section>
 
   <section id="services" class="section alt">
@@ -219,5 +261,6 @@
 <div class="lightbox" id="lightbox" hidden><img alt=""></div>
 
 <script src="script.js"></script>
+<script type="module" src="tryon.js"></script>
 </body>
 </html>
