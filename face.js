@@ -11,15 +11,18 @@ const statusEl = $('tryon-status');
 let landmarkerPromise = null;
 let busy = false;
 
-// 臉型 → 一般的髮型建議，對應網站「流行趨勢」的卡片
-const SHAPES = {
-  oval: { name: '鵝蛋形', tip: '比例均衡，大部分髮型都適合，可以依喜好挑選。', picks: ['俐落短鮑伯', '日系齊短髮', '慵懶層次長髮'] },
-  round: { name: '圓形', tip: '想拉長臉部線條，可以選有層次、有垂直感的長度。', picks: ['慵懶層次長髮', '俐落短鮑伯'] },
-  square: { name: '方形', tip: '想柔化下顎線條，波浪和層次都很適合。', picks: ['慵懶層次長髮', '日系齊短髮'] },
-  long: { name: '長形', tip: '想增加橫向的份量，齊瀏海或蓬鬆的鮑伯比較平衡。', picks: ['日系齊短髮', '俐落短鮑伯'] },
-  heart: { name: '心形（倒三角）', tip: '想讓下半部多一點份量，鮑伯或髮尾波浪很適合。', picks: ['俐落短鮑伯', '慵懶層次長髮'] },
+// 臉部比例 → 一般的髮型建議，對應網站「流行趨勢」的卡片
+// （臉部關鍵點模型會讓各種臉的比例很接近，所以只分「臉長」和「下顎」兩個比較看得出差異的特徵）
+const LENGTHS = {
+  long: { name: '偏長', tip: '想增加橫向的份量，齊瀏海或蓬鬆的鮑伯比較平衡。', picks: ['日系齊短髮', '俐落短鮑伯'] },
+  short: { name: '偏圓短', tip: '想拉長臉部線條，可以選有層次、有垂直感的長度。', picks: ['慵懶層次長髮', '俐落短鮑伯'] },
+  mid: { name: '比例均衡', tip: '大部分髮型都適合，可以依喜好挑選。', picks: ['俐落短鮑伯', '日系齊短髮', '慵懶層次長髮'] },
 };
-
+const JAWS = {
+  strong: { name: '較明顯', tip: '波浪和層次能柔化下顎線條。' },
+  soft: { name: '柔和', tip: '' },
+  pointed: { name: '下巴偏尖', tip: '髮尾有份量的鮑伯或波浪，能平衡下半部。' },
+};
 // 膚色傾向 → 推薦髮色（顏色代碼要和上方色塊一致）
 const SWATCH_NAMES = {
   '#3b2418': '濃縮咖啡棕', '#5a2a3c': '酒紅／梅子', '#c9a06a': '奶油蜂蜜金', '#a8683a': '暖栗焦糖', '#e4dccb': '霜感冷金',
@@ -47,24 +50,21 @@ function getLandmarker() {
   return landmarkerPromise;
 }
 
-function faceShape(lm, w, h) {
+function faceProfile(lm, w, h) {
   const d = (i, j) => Math.hypot((lm[i].x - lm[j].x) * w, (lm[i].y - lm[j].y) * h);
-  const cheek = d(234, 454);      // 顴骨寬
-  const jaw = d(58, 288);         // 下顎角寬
-  const forehead = d(21, 251);    // 額頭寬
-  const length = d(10, 152);      // 臉長
+  const cheek = d(234, 454);        // 顴骨寬
+  const jaw = d(172, 397);          // 下顎寬
+  const length = d(10, 152);        // 臉長
   const yaw = d(1, 234) / d(1, 454); // 鼻尖到左右臉緣的比例，用來判斷有沒有轉頭
   const lr = length / cheek;
   const jr = jaw / cheek;
-  const fr = forehead / cheek;
-  let key;
-  if (lr >= 1.36) key = 'long';
-  else if (fr - jr >= 0.2) key = 'heart';
-  else if (lr <= 1.2) key = jr >= 0.78 ? 'square' : 'round';
-  else key = 'oval';
-  return { key, lr, jr, fr, turned: yaw < 0.7 || yaw > 1.43 };
+  return {
+    len: lr >= 1.36 ? 'long' : lr <= 1.22 ? 'short' : 'mid',
+    jaw: jr >= 0.82 ? 'strong' : jr <= 0.77 ? 'pointed' : 'soft',
+    lr, jr,
+    turned: yaw < 0.5 || yaw > 1.55,
+  };
 }
-
 function rgbToLab(r, g, b) {
   const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
   const R = lin(r), G = lin(g), B = lin(b);
@@ -87,22 +87,34 @@ function skinTone(photo, lm, w, h) {
   });
   const lab = rgbToLab(r / n, g / n, b / n);
   const hue = (Math.atan2(lab.b, lab.a) * 180) / Math.PI;
-  const key = hue >= 57 ? 'warm' : hue < 50 ? 'cool' : 'neutral';
+  const key = hue >= 62 ? 'warm' : hue < 55 ? 'cool' : 'neutral';
   return { key, hue, L: lab.L };
 }
 
-function show(shape, tone) {
-  const s = SHAPES[shape.key];
+function show(profile, tone) {
   const t = TONES[tone.key];
   box.innerHTML = '';
   const h3 = document.createElement('h3');
   h3.textContent = '分析結果（僅供參考）';
-  const p1 = document.createElement('p');
-  p1.className = 'an-line';
-  p1.innerHTML = `<b>臉型：</b>${s.name} <small>臉長/顴骨寬 ${shape.lr.toFixed(2)}・下顎/顴骨 ${shape.jr.toFixed(2)}</small>`;
-  const p2 = document.createElement('p');
-  p2.className = 'an-tip';
-  p2.innerHTML = `${s.tip}可參考：${s.picks.map((n) => `<a href="#trends">${n}</a>`).join('、')}。`;
+  box.append(h3);
+
+  if (profile.turned) {
+    const warn = document.createElement('p');
+    warn.className = 'an-tip';
+    warn.textContent = '照片裡的臉有轉向，臉型比例會不準，所以這張不判斷臉型。請用正面、直視鏡頭的照片再試一次。';
+    box.append(warn);
+  } else {
+    const L = LENGTHS[profile.len];
+    const J = JAWS[profile.jaw];
+    const p1 = document.createElement('p');
+    p1.className = 'an-line';
+    p1.innerHTML = `<b>臉部比例：</b>${L.name}・下顎線條${J.name} <small>臉長/顴骨寬 ${profile.lr.toFixed(2)}・下顎/顴骨 ${profile.jr.toFixed(2)}</small>`;
+    const p2 = document.createElement('p');
+    p2.className = 'an-tip';
+    p2.innerHTML = `${L.tip}${J.tip}可參考：${L.picks.map((n) => `<a href="#trends">${n}</a>`).join('、')}。`;
+    box.append(p1, p2);
+  }
+
   const p3 = document.createElement('p');
   p3.className = 'an-line';
   p3.innerHTML = `<b>膚色傾向：</b>${t.name}`;
@@ -124,17 +136,10 @@ function show(shape, tone) {
   });
   const note = document.createElement('p');
   note.className = 'bk-small';
-  note.textContent = '這是依照片比例和顏色做的粗略判斷，會受角度、光線和化妝影響，不是專業診斷。點選推薦的顏色，可以直接套用在上面的照片。';
-  box.append(h3, p1, p2, p3, row, note);
-  if (shape.turned) {
-    const warn = document.createElement('p');
-    warn.className = 'bk-small';
-    warn.textContent = '照片的臉似乎有點偏，臉型結果可能不準，建議用正面照片再試一次。';
-    box.append(warn);
-  }
+  note.textContent = '這是依照片比例和顏色做的粗略判斷，會受角度、光線（尤其是黃光）和化妝影響，不是專業診斷。點選推薦的顏色，可以直接套用在上面的照片。';
+  box.append(p3, row, note);
   box.hidden = false;
 }
-
 async function analyze() {
   const photo = window.tryonPhoto;
   if (!photo || busy) return;
@@ -145,7 +150,7 @@ async function analyze() {
     statusEl.textContent = '正在載入臉部辨識模型（約 3.7MB，第一次需要幾秒）…';
     statusEl.classList.add('loading');
     const landmarker = await getLandmarker();
-    statusEl.textContent = '正在分析臉型與膚色…';
+    statusEl.textContent = '正在分析臉部比例與膚色…';
     const res = landmarker.detect(photo);
     if (!res.faceLandmarks || !res.faceLandmarks.length) {
       statusEl.textContent = '沒有偵測到臉，請用正面、臉沒被遮住的照片。';
@@ -153,7 +158,7 @@ async function analyze() {
     }
     const lm = res.faceLandmarks[0];
     const w = photo.width, h = photo.height;
-    show(faceShape(lm, w, h), skinTone(photo, lm, w, h));
+    show(faceProfile(lm, w, h), skinTone(photo, lm, w, h));
     statusEl.textContent = '分析完成，結果在下方。';
   } catch (err) {
     console.error(err);
