@@ -87,7 +87,7 @@ function skinTone(photo, lm, w, h) {
   });
   const lab = rgbToLab(r / n, g / n, b / n);
   const hue = (Math.atan2(lab.b, lab.a) * 180) / Math.PI;
-  const key = hue >= 62 ? 'warm' : hue < 55 ? 'cool' : 'neutral';
+  const key = hue >= 63 ? 'warm' : hue < 52 ? 'cool' : 'neutral';
   return { key, hue, L: lab.L };
 }
 
