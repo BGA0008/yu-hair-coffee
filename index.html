@@ -102,6 +102,11 @@
           <input type="file" id="tryon-pick" accept="image/*" hidden>
         </div>
         <div class="tryon-controls" id="tryon-controls" hidden>
+          <div class="tryon-analyze-row">
+            <button type="button" class="btn btn-ghost" id="tryon-analyze">分析我的臉型與膚色</button>
+            <small>幫你推薦髮型和髮色</small>
+          </div>
+          <div class="tryon-analysis" id="tryon-analysis" hidden></div>
           <h3>選擇髮色</h3>
           <div class="swatch-row">
             <button type="button" class="swatch-btn" style="--c:#3b2418" data-color="#3b2418" aria-pressed="true" title="濃縮咖啡棕"><span>濃縮咖啡棕</span></button>
@@ -320,6 +325,7 @@
 
 <script src="script.js"></script>
 <script type="module" src="tryon.js"></script>
+<script type="module" src="face.js"></script>
 <script type="module" src="booking.js"></script>
 </body>
 </html>

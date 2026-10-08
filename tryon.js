@@ -117,6 +117,13 @@ async function handleFile(file) {
     if (bmp.close) bmp.close();
     base = ctx.getImageData(0, 0, w, h);
     out = new ImageData(new Uint8ClampedArray(base.data), w, h);
+    // 保留一份原始照片給「臉型與膚色分析」使用
+    const orig = document.createElement('canvas');
+    orig.width = w;
+    orig.height = h;
+    orig.getContext('2d').putImageData(base, 0, 0);
+    window.tryonPhoto = orig;
+    document.dispatchEvent(new CustomEvent('tryon:photo'));
     canvas.hidden = false;
     emptyBox.hidden = true;
 
