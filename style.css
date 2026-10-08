@@ -118,6 +118,44 @@ a { color: inherit; }
 .tryon-row input[type="color"] { width: 48px; height: 36px; border: 2px solid var(--accent); border-radius: 10px; background: none; padding: 2px; cursor: pointer; }
 .tryon-row output { min-width: 3em; font-variant-numeric: tabular-nums; }
 
+.booking { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: start; }
+.bk-form h3, .bk-summary h3 { font-size: 1rem; font-weight: 900; color: var(--accent); margin: 24px 0 10px; }
+.bk-form h3:first-child, .bk-summary h3:first-child { margin-top: 0; }
+.bk-group { background: var(--card); border: 2px solid var(--accent); border-radius: 20px; margin-bottom: 10px; padding: 0 18px; }
+.bk-group summary { cursor: pointer; list-style: none; padding: 12px 0; display: flex; align-items: baseline; gap: 10px; }
+.bk-group summary::-webkit-details-marker { display: none; }
+.bk-group summary b { font-size: 1.4rem; color: var(--accent); }
+.bk-group summary small { font-size: .75rem; letter-spacing: .15em; color: var(--muted); }
+.bk-group summary em { margin-left: auto; font-style: normal; font-size: .8rem; font-weight: 700; color: var(--warm); }
+.bk-group summary::after { content: "＋"; color: var(--accent); font-weight: 900; }
+.bk-group[open] summary::after { content: "－"; }
+.bk-group[open] { padding-bottom: 10px; }
+.bk-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); cursor: pointer; }
+.bk-item input { width: 20px; height: 20px; accent-color: var(--accent); flex: none; }
+.bk-len { display: flex; flex-wrap: wrap; gap: 8px; }
+.bk-len label { cursor: pointer; }
+.bk-len input { position: absolute; opacity: 0; pointer-events: none; }
+.bk-len span { display: inline-block; padding: 8px 20px; border: 2px solid var(--accent); border-radius: 999px; font-weight: 700; color: var(--accent); background: var(--card); }
+.bk-len input:checked + span { background: var(--accent); color: #fff; }
+.bk-len input:focus-visible + span { outline: 3px solid var(--warm); outline-offset: 2px; }
+.bk-help, .bk-small { font-size: .82rem; color: var(--muted); margin-top: 8px; }
+.bk-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bk-fields label { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; font-weight: 700; }
+.bk-fields .bk-wide { grid-column: 1 / -1; }
+.bk-fields input, .bk-fields select, .bk-fields textarea, .bk-summary textarea {
+  font: inherit; letter-spacing: .03em; padding: 10px 14px; border: 2px solid var(--accent); border-radius: 14px; background: var(--card); color: var(--text);
+}
+.bk-summary { position: sticky; top: 88px; background: var(--card); border: 2px solid var(--accent); border-radius: var(--radius); padding: 24px; }
+.bk-lines { list-style: none; }
+.bk-lines li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
+.bk-lines li span:last-child { font-weight: 700; color: var(--warm); white-space: nowrap; }
+.bk-empty { color: var(--muted); font-size: .9rem; }
+.bk-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; font-weight: 700; }
+.bk-total-row strong { font-size: 1.5rem; color: var(--warm); }
+.bk-summary textarea { width: 100%; resize: vertical; font-size: .88rem; line-height: 1.7; }
+.bk-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.btn[aria-disabled="true"], .btn:disabled { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
 .menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
 .cat { background: var(--card); border: 2px solid var(--accent); border-radius: var(--radius); padding: 28px; }
 .cat h3 { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
@@ -181,6 +219,9 @@ cite { display: block; margin-top: 12px; color: var(--muted); font-style: normal
   .trend-grid { grid-template-columns: repeat(2, 1fr); }
   .menu { grid-template-columns: 1fr; }
   .tryon { grid-template-columns: 1fr; }
+  .booking { grid-template-columns: 1fr; }
+  .bk-summary { position: static; }
+  .bk-fields { grid-template-columns: 1fr; }
   .swatch-row { grid-template-columns: repeat(5, 1fr); gap: 8px; }
   .price-list li { flex-direction: column; gap: 2px; }
   .price-list .p { text-align: left; white-space: normal; }

@@ -31,7 +31,7 @@
     <a href="#about">關於設計師</a>
     <a href="#coffee">咖啡空間</a>
     <a href="#reviews">客人評價</a>
-    <a href="#contact" class="nav-cta">預約</a>
+    <a href="#booking" class="nav-cta">預約</a>
   </nav>
 </header>
 
@@ -203,6 +203,64 @@
     </ul>
   </section>
 
+  <section id="booking" class="section">
+    <h2>預約與估價</h2>
+    <p class="sub">勾選想做的項目，馬上看到大概價格，並自動產生預約訊息，一鍵用 LINE 傳給我們。資料只在你的裝置上處理，<strong>要等你在 LINE 裡按送出才會傳出去</strong>。</p>
+    <div class="booking">
+      <div class="bk-form">
+        <h3>1. 選擇項目</h3>
+        <div id="bk-services"></div>
+
+        <h3>2. 髮長</h3>
+        <div class="bk-len" role="radiogroup" aria-label="髮長">
+          <label><input type="radio" name="bk-len" value="短"><span>短</span></label>
+          <label><input type="radio" name="bk-len" value="中" checked><span>中</span></label>
+          <label><input type="radio" name="bk-len" value="中長"><span>中長</span></label>
+          <label><input type="radio" name="bk-len" value="長"><span>長</span></label>
+          <label><input type="radio" name="bk-len" value="超長"><span>超長</span></label>
+        </div>
+        <p class="bk-help">髮長與髮量以現場判斷為準，這裡只是估價用。</p>
+
+        <h3>3. 希望時間</h3>
+        <div class="bk-fields">
+          <label>日期 <input type="date" id="bk-date"></label>
+          <label>時段
+            <select id="bk-time">
+              <option>都可以</option>
+              <option>上午（10:30 後）</option>
+              <option>中午</option>
+              <option>下午</option>
+              <option>傍晚</option>
+            </select>
+          </label>
+        </div>
+
+        <h3>4. 其他（選填）</h3>
+        <div class="bk-fields">
+          <label>稱呼 <input type="text" id="bk-name" maxlength="20" placeholder="例如：王小姐"></label>
+          <label class="bk-wide">備註 <textarea id="bk-note" rows="3" maxlength="200" placeholder="例如：想染霧感棕色、第一次來店"></textarea></label>
+        </div>
+      </div>
+
+      <aside class="bk-summary">
+        <h3>預估金額</h3>
+        <p class="bk-empty" id="bk-empty">請先在左邊勾選至少一個項目。</p>
+        <ul class="bk-lines" id="bk-lines"></ul>
+        <p class="bk-total-row"><span>合計</span><strong id="bk-total">NT$ 0</strong></p>
+        <p class="bk-small">以價目表原價估算，不含優惠；「起」代表依髮量或髮長可能再增加，實際金額以現場為準。</p>
+
+        <h3>預約訊息</h3>
+        <textarea id="bk-msg" readonly rows="9" aria-label="預約訊息預覽"></textarea>
+        <div class="bk-actions">
+          <a class="btn" id="bk-line" href="#booking" target="_blank" rel="noopener" aria-disabled="true">用 LINE 傳送</a>
+          <button type="button" class="btn btn-ghost" id="bk-copy" disabled>複製訊息</button>
+        </div>
+        <p class="bk-small" id="bk-hint" role="status"></p>
+        <p class="bk-small">本店採預約制，送出後請等候我們回覆確認時間；急件也可以直接電話聯絡。</p>
+      </aside>
+    </div>
+  </section>
+
   <section id="about" class="section about">
     <img src="images/designer.jpg" alt="美髮剪刀與梳子（示意照片）" loading="lazy">
     <div>
@@ -262,5 +320,6 @@
 
 <script src="script.js"></script>
 <script type="module" src="tryon.js"></script>
+<script type="module" src="booking.js"></script>
 </body>
 </html>
