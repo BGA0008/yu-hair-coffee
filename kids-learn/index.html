@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小小學習樂園</title>
+  <meta name="description" content="給小朋友的學習網站: 聽唐詩三百首、學 ABC 字母、認識 123 數字。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌈%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Huninn&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header id="site-header" data-active="home"></header>
+
+<main>
+  <section class="hero">
+    <h1>小小學習樂園</h1>
+    <p>點一點、聽一聽, 開心學習!</p>
+  </section>
+
+  <section class="home-grid" aria-label="學習單元">
+    <a class="home-card poems" href="poems.html">
+      <span class="icon" aria-hidden="true">📜</span>
+      <h2>唐詩三百首</h2>
+      <p>點一首詩, 就唸給你聽<br>還有最常聽的 Top 10</p>
+    </a>
+    <a class="home-card abc" href="abc.html">
+      <span class="icon" aria-hidden="true">🔤</span>
+      <h2>ABC 字母</h2>
+      <p>圖片 + 聲音 + 小遊戲<br>還有 YouTube 字母歌</p>
+    </a>
+    <a class="home-card numbers" href="numbers.html">
+      <span class="icon" aria-hidden="true">🔢</span>
+      <h2>123 數字</h2>
+      <p>一邊數一邊學, 中文英文都會<br>還有 YouTube 數數歌</p>
+    </a>
+  </section>
+
+  <noscript><p class="note">需要開啟 JavaScript 才能使用聲音與遊戲功能。</p></noscript>
+</main>
+
+<footer class="footer">聲音由瀏覽器內建的語音朗讀產生 · 建議使用 Chrome、Edge 或 Safari</footer>
+
+<script src="js/common.js"></script>
+</body>
+</html>

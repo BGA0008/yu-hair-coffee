@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>唐詩三百首 | 小小學習樂園</title>
+  <meta name="description" content="點一首唐詩就會唸給你聽, 並記錄最常播放的前 10 名。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📜%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Huninn&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-poems">
+<header id="site-header" data-active="poems"></header>
+
+<main>
+  <section class="hero">
+    <h1>唐詩三百首</h1>
+    <p>點一首詩, 就會唸給你聽 🎧</p>
+  </section>
+
+  <section class="panel top10" aria-labelledby="top10-title">
+    <h2 id="top10-title">🏆 最常播放 Top 10</h2>
+    <ol id="top10" class="top10-list"></ol>
+    <p id="top10-empty" class="top10-empty" hidden>還沒有播放紀錄喔! 點一首詩聽聽看, 常聽的詩會自動排進來, 下次一點就能再聽。</p>
+    <button id="reset-plays" class="link-btn" type="button" hidden>清除排行紀錄</button>
+  </section>
+
+  <section class="toolbar" aria-label="找詩">
+    <label class="search">
+      <span class="sr-only">搜尋詩名、詩人或詩句</span>
+      <input id="q" type="search" placeholder="🔍 找詩名、詩人或詩句 (例如: 李白、月)" autocomplete="off">
+    </label>
+    <div id="type-chips" class="chips" role="group" aria-label="詩的種類"></div>
+    <p id="type-hint" class="type-hint"></p>
+    <div class="speed" role="group" aria-label="朗讀速度">
+      <span class="label">朗讀速度:</span>
+      <button class="chip" type="button" data-rate="0.6" aria-pressed="false">🐢 很慢</button>
+      <button class="chip" type="button" data-rate="0.8" aria-pressed="true">🐰 慢慢唸</button>
+      <button class="chip" type="button" data-rate="1" aria-pressed="false">🐆 正常</button>
+    </div>
+  </section>
+
+  <p id="result-count" class="result-count" aria-live="polite"></p>
+  <ul id="poem-list" class="poem-grid"></ul>
+  <p id="no-result" class="note" hidden>找不到這首詩, 換個字再找找看。</p>
+  <noscript><p class="note">需要開啟 JavaScript 才能使用。</p></noscript>
+</main>
+
+<aside id="player" class="player" aria-label="正在播放" hidden>
+  <div class="player-head">
+    <div id="pl-title" class="player-title"></div>
+    <div class="player-btns">
+      <button id="pl-toggle" class="btn" type="button"></button>
+      <button id="pl-close" class="btn btn-ghost" type="button" aria-label="關閉播放區">✕</button>
+    </div>
+  </div>
+  <div id="pl-lines" class="player-lines"></div>
+</aside>
+
+<footer class="footer">詩文來源: chinese-poetry 開源專案 · 聲音由瀏覽器內建的語音朗讀產生</footer>
+
+<script src="data/poems.js"></script>
+<script src="js/common.js"></script>
+<script src="js/poems.js"></script>
+</body>
+</html>

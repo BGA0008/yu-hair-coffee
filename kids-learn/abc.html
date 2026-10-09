@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ABC 字母 | 小小學習樂園</title>
+  <meta name="description" content="用圖片和聲音輕鬆記住 26 個英文字母, 還有小遊戲和 YouTube 字母歌。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔤%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Huninn&family=Andika:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-abc">
+<header id="site-header" data-active="abc"></header>
+
+<main>
+  <section class="hero">
+    <h1>ABC 字母樂園</h1>
+    <p>點一下字母卡片, 聽聽看它怎麼唸! 每個字母都有一個好朋友 🍎</p>
+    <div class="page-nav">
+      <a class="chip" href="#cards">🔤 字母卡片</a>
+      <a class="chip" href="#game">🎮 小遊戲</a>
+      <a class="chip" href="#videos">🎬 看影片</a>
+    </div>
+  </section>
+
+  <section id="cards" aria-labelledby="cards-title">
+    <h2 id="cards-title">🔤 字母卡片</h2>
+    <p style="margin-bottom:14px">
+      <button id="sing" class="btn" type="button">▶ 從 A 唸到 Z</button>
+    </p>
+    <ul id="letters" class="letter-grid"></ul>
+  </section>
+
+  <section id="game" aria-labelledby="game-title">
+    <h2 id="game-title">🎮 小遊戲</h2>
+    <div id="quiz"></div>
+  </section>
+
+  <section id="videos" aria-labelledby="videos-title">
+    <h2 id="videos-title">🎬 看影片學 ABC</h2>
+    <div id="video-shelf"></div>
+  </section>
+  <noscript><p class="note">需要開啟 JavaScript 才能使用。</p></noscript>
+</main>
+
+<footer class="footer">聲音由瀏覽器內建的語音朗讀產生 · 影片來自 YouTube</footer>
+
+<script src="data/videos.js"></script>
+<script src="js/common.js"></script>
+<script src="js/abc.js"></script>
+</body>
+</html>

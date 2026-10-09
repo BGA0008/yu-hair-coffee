@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>123 數字 | 小小學習樂園</title>
+  <meta name="description" content="一邊數一邊學數字 1 到 100, 有中文、英文、注音, 還有小遊戲和 YouTube 數數歌。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔢%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Huninn&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-numbers">
+<header id="site-header" data-active="numbers"></header>
+
+<main>
+  <section class="hero">
+    <h1>123 數字樂園</h1>
+    <p>點一下卡片, 跟著一起數數看!</p>
+    <div class="lang-switch" role="group" aria-label="說話的語言">
+      <span class="label">🔊 用什麼語言唸:</span>
+      <button class="chip" type="button" data-lang="zh" aria-pressed="true">中文</button>
+      <button class="chip" type="button" data-lang="en" aria-pressed="false">English</button>
+    </div>
+    <div class="page-nav">
+      <a class="chip" href="#ones">1 到 10</a>
+      <a class="chip" href="#teens">11 到 20</a>
+      <a class="chip" href="#tens">30 到 100</a>
+      <a class="chip" href="#game">🎮 小遊戲</a>
+      <a class="chip" href="#videos">🎬 看影片</a>
+    </div>
+  </section>
+
+  <section id="ones" aria-labelledby="ones-title">
+    <h2 id="ones-title">1 到 10</h2>
+    <ul id="ones-list" class="num-grid"></ul>
+  </section>
+
+  <section id="teens" aria-labelledby="teens-title">
+    <h2 id="teens-title">11 到 20</h2>
+    <ul id="teens-list" class="num-grid small"></ul>
+  </section>
+
+  <section id="tens" aria-labelledby="tens-title">
+    <h2 id="tens-title">30 到 100 (一次數十個)</h2>
+    <ul id="tens-list" class="num-grid small"></ul>
+  </section>
+
+  <section id="game" aria-labelledby="game-title">
+    <h2 id="game-title">🎮 小遊戲</h2>
+    <div id="quiz"></div>
+  </section>
+
+  <section id="videos" aria-labelledby="videos-title">
+    <h2 id="videos-title">🎬 看影片學數數</h2>
+    <div id="video-shelf"></div>
+  </section>
+  <noscript><p class="note">需要開啟 JavaScript 才能使用。</p></noscript>
+</main>
+
+<footer class="footer">聲音由瀏覽器內建的語音朗讀產生 · 影片來自 YouTube</footer>
+
+<script src="data/videos.js"></script>
+<script src="js/common.js"></script>
+<script src="js/numbers.js"></script>
+</body>
+</html>
