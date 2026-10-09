@@ -56,15 +56,36 @@
     synth.addEventListener('voiceschanged', refresh);
   }
 
+  const normLang = (v) => v.lang.replace('_', '-').toLowerCase();
+  // 語音名稱裡有這些字, 通常是品質比較好的版本 (Edge 的 Natural、iPhone 下載的進階/優質版、Chrome 的 Google 線上語音)
+  const VOICE_QUALITY = [
+    [/natural|neural|premium|優質|高品質/i, 3],
+    [/enhanced|進階|增強|加強/i, 2],
+    [/siri/i, 2],
+    [/online|google/i, 1],
+  ];
+  const voiceScore = (v) => VOICE_QUALITY.reduce((s, [re, n]) => s + (re.test(v.name) ? n : 0), 0);
+
+  // 家長在頁面上選的語音 (每種語言各記一個), 找不到了就當作沒選
+  function chosenVoice(lang) {
+    const uri = store.get('voice.' + lang, null);
+    return (uri && voices.find((v) => v.voiceURI === uri)) || null;
+  }
+
   function pickVoice(lang) {
-    const norm = (v) => v.lang.replace('_', '-').toLowerCase();
-    // 偏好 Edge 的 Natural 語音與 Chrome 的 Google 語音, 聽起來比較自然
-    const score = (v) => (/natural|neural/i.test(v.name) ? 2 : 0) + (/online|google/i.test(v.name) ? 1 : 0);
+    const chosen = chosenVoice(lang);
+    if (chosen) return chosen;
     for (const want of VOICE_FALLBACK[lang] || [lang.toLowerCase()]) {
-      const pool = voices.filter((v) => (want.length === 2 ? norm(v).startsWith(want) : norm(v) === want));
-      if (pool.length) return pool.sort((a, b) => score(b) - score(a))[0];
+      const pool = voices.filter((v) => (want.length === 2 ? normLang(v).startsWith(want) : normLang(v) === want));
+      if (pool.length) return pool.sort((a, b) => voiceScore(b) - voiceScore(a))[0];
     }
     return null; // 找不到就只設 lang, 讓瀏覽器自己挑
+  }
+
+  // 給「換聲音」選單用: 這台裝置上某個語言 (prefix 例如 'zh') 的所有語音, 台灣國語排最前面
+  function voicesFor(prefix) {
+    const rank = (v) => (normLang(v) === 'zh-tw' ? 0 : normLang(v) === 'zh-cn' ? 1 : 2);
+    return voices.filter((v) => normLang(v).startsWith(prefix)).sort((a, b) => rank(a) - rank(b) || voiceScore(b) - voiceScore(a));
   }
 
   let gen = 0;          // 每次 stop()/run() 都 +1, 舊的朗讀序列看到不一樣就自行結束
@@ -79,7 +100,11 @@
       const rate = item.rate ?? (typeof opts.rate === 'function' ? opts.rate() : opts.rate) ?? 1;
       u.rate = rate;
       const v = pickVoice(u.lang);
-      if (v) u.voice = v;
+      if (v) {
+        u.voice = v;
+        // 選了別種口音的語音 (例如大陸國語) 時, lang 也跟著改, 避免有的瀏覽器因為兩者不一致而換掉語音
+        if (normLang(v) !== u.lang.toLowerCase()) u.lang = v.lang;
+      }
       current = u;
       let done = false;
       const timer = setTimeout(() => finish(), Math.max(4000, (item.text.length * 700) / rate + 2000));
@@ -188,7 +213,7 @@
     setTimeout(go, 1500);
   }
   function hasVoice(prefixes) {
-    return voices.some((v) => prefixes.some((p) => v.lang.replace('_', '-').toLowerCase().startsWith(p)));
+    return voices.some((v) => prefixes.some((p) => normLang(v).startsWith(p)));
   }
   /**
    * 在 host 裡放一則提醒: 這台裝置沒有 prefixes (例如 ['en']) 的語音時才顯示。
@@ -204,7 +229,20 @@
     return (needed = true) => whenVoicesReady(() => { el.hidden = !needed || hasVoice(prefixes); });
   }
 
-  const Speech = { run, runList, stop, supported: !!synth, voiceNote };
+  // iPad 的 Safari 會假裝成 Mac, 所以還要看有沒有觸控
+  function detectPlatform(ua, platform, touchPoints) {
+    return {
+      ios: /iPad|iPhone|iPod/.test(ua) || (platform === 'MacIntel' && touchPoints > 1),
+      android: /Android/i.test(ua),
+    };
+  }
+
+  const Speech = {
+    run, runList, stop, voiceNote, voicesFor, whenReady: whenVoicesReady,
+    supported: !!synth,
+    getVoiceUri: (lang) => (chosenVoice(lang) ? chosenVoice(lang).voiceURI : ''),
+    setVoice: (lang, uri) => store.set('voice.' + lang, uri || null),
+  };
 
   /* ---------- 答題音效 ---------- */
   let audioCtx;
@@ -443,5 +481,6 @@
     showStart();
   }
 
-  window.Kids = { $, esc, sleep, shuffle, store, toast, Speech, chime, mountVideos, createQuiz };
+  const platform = detectPlatform(navigator.userAgent, navigator.platform, navigator.maxTouchPoints || 0);
+  window.Kids = { $, esc, sleep, shuffle, store, toast, Speech, chime, mountVideos, createQuiz, platform, detectPlatform };
 })();

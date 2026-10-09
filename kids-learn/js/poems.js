@@ -198,6 +198,29 @@
 
   window.addEventListener('resize', fitPadding);
 
+  /* ---------- 換聲音 ---------- */
+  const voiceSelect = $('#voice-select');
+  const voiceLabel = (v) => `${v.name} (${v.lang.replace('_', '-')})${/^(zh[-_]HK|yue)/i.test(v.lang) ? ' 粵語' : ''}`;
+  Speech.whenReady(() => {
+    voiceSelect.innerHTML = '<option value="">自動選擇 (推薦)</option>' +
+      Speech.voicesFor('zh').map((v) => `<option value="${esc(v.voiceURI)}">${esc(voiceLabel(v))}</option>`).join('');
+    voiceSelect.value = Speech.getVoiceUri('zh-TW');
+  });
+  voiceSelect.addEventListener('change', () => Speech.setVoice('zh-TW', voiceSelect.value));
+  $('#voice-test').addEventListener('click', () => {
+    stopPlaying();
+    Speech.run([{ text: '床前明月光，疑是地上霜。', lang: 'zh-TW' }], { rate: () => rate });
+  });
+  const voiceTip = $('#voice-tip');
+  if (Kids.platform.ios) {
+    voiceTip.hidden = false;
+    voiceTip.textContent = 'iPhone / iPad 預設的語音比較機械。可以到「設定 → 輔助使用 → 朗讀內容 → 聲音 → 中文 → 台灣」(Settings → Accessibility → Spoken Content → Voices),' +
+      '下載品質比較好的版本 (名稱有「進階」「優質」或 Enhanced、Premium), 回到這個頁面重新整理後, 再從上面的選單選它。實際選單名稱可能因 iOS 版本略有不同。';
+  } else if (Kids.platform.android) {
+    voiceTip.hidden = false;
+    voiceTip.textContent = 'Android 可以到「設定 → 一般管理 → 語言 → 文字轉語音輸出」(各品牌選單名稱略有不同), 確認使用「Google 文字轉語音」並已下載「國語 (台灣)」的語音資料。';
+  }
+
   Speech.voiceNote($('.hero'), ['zh-tw', 'zh-cn'], '⚠️ 這台裝置找不到<b>中文語音</b>, 沒辦法唸出來。建議改用 Chrome、Edge 或 Safari 瀏覽器。')();
 
   /* ---------- 開始 ---------- */

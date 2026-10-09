@@ -40,6 +40,15 @@
       <button class="chip" type="button" data-rate="0.8" aria-pressed="true">🐰 慢慢唸</button>
       <button class="chip" type="button" data-rate="1" aria-pressed="false">🐆 正常</button>
     </div>
+    <details class="parent-box">
+      <summary>🔊 聲音怪怪的? 換一個聲音</summary>
+      <p class="note" style="margin:6px 0 10px">不同手機和電腦內建的語音不一樣, 挑一個聽起來最自然的, 之後都會記住。</p>
+      <div class="voice-row">
+        <select id="voice-select" aria-label="選擇朗讀的語音"><option value="">自動選擇 (推薦)</option></select>
+        <button id="voice-test" class="btn btn-ghost" type="button">🔈 試聽</button>
+      </div>
+      <p id="voice-tip" class="note" hidden></p>
+    </details>
   </section>
 
   <p id="result-count" class="result-count" aria-live="polite"></p>

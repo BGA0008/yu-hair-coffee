@@ -8,7 +8,7 @@
   const ZY = ['ㄌㄧㄥˊ', 'ㄧ', 'ㄦˋ', 'ㄙㄢ', 'ㄙˋ', 'ㄨˇ', 'ㄌㄧㄡˋ', 'ㄑㄧ', 'ㄅㄚ', 'ㄐㄧㄡˇ', 'ㄕˊ'];
   const EN = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
     'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
-  const EN_TENS = { 30: 'thirty', 40: 'forty', 50: 'fifty', 60: 'sixty', 70: 'seventy', 80: 'eighty', 90: 'ninety', 100: 'one hundred' };
+  const EN_TENS = { 20: 'twenty', 30: 'thirty', 40: 'forty', 50: 'fifty', 60: 'sixty', 70: 'seventy', 80: 'eighty', 90: 'ninety', 100: 'one hundred' };
 
   // 只處理 1~100 的整數: 十一、二十、三十 ... 一百
   function parts(n, table) {
@@ -19,7 +19,8 @@
   }
   const zh = (n) => (n === 100 ? '一百' : parts(n, ZH).join(''));
   const zy = (n) => (n === 100 ? 'ㄧˋ ㄅㄞˇ' : parts(n, ZY).join(' ')); // 一百的「一」要變調唸ㄧˋ
-  const en = (n) => (n <= 20 ? EN[n] : EN_TENS[n]);
+  // 21~99 要接上個位數: twenty-one, thirty-five ...
+  const en = (n) => (n <= 20 || n % 10 === 0 ? EN[n] || EN_TENS[n] : `${EN_TENS[n - (n % 10)]}-${EN[n % 10]}`);
 
   // 1~10 的數數圖案, 以及好記的小提示
   const OBJ = ['🐶', '🐱', '🐰', '🐸', '🐥', '🍓', '⭐', '🐟', '🍩', '🎈'];
@@ -53,6 +54,7 @@
 
   async function speakNumber(n, cardEl) {
     const my = ++token;
+    endSequence(true);
     clearActive();
     cardEl.classList.add('is-active');
     const objs = [...cardEl.querySelectorAll('.obj')];
@@ -71,6 +73,86 @@
     if (c) speakNumber(Number(c.dataset.n), c);
   });
 
+  /* ---------- 連續唸 ----------
+   * 頁面上方: 從 1 一路唸到 10 / 20 / 100, 用大字舞台顯示目前的數字
+   * 每個區塊 (1~10、11~20、30~100) 自己的按鈕: 只唸這一段, 唸到哪個數字, 哪張卡片就亮起來
+   */
+  const PLAYS = {
+    'top-10': { nums: range(1, 10), stage: true },
+    'top-20': { nums: range(1, 20), stage: true },
+    'top-100': { nums: range(1, 100), stage: true },
+    ones: { nums: range(1, 10) },
+    teens: { nums: range(11, 20) },
+    tens: { nums: range(30, 100, 10) },
+  };
+  const playBtns = [...document.querySelectorAll('[data-play]')];
+  const stage = $('#stage');
+  let playingId = ''; // 目前正在連續唸的是哪一個按鈕 ('' = 沒有在唸)
+
+  function renderPlayButtons() {
+    playBtns.forEach((b) => {
+      const on = b.dataset.play === playingId;
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? '⏹ 停止' : `▶ ${b.dataset.label}`;
+    });
+  }
+
+  function showStage(n, end) {
+    stage.hidden = false;
+    stage.innerHTML =
+      `<div class="stage-num">${n}</div><div class="stage-zh">${zh(n)}</div>` +
+      `<div class="stage-zy">${zy(n)}</div><div class="stage-en">${en(n)}</div>` +
+      `<div class="stage-bar" aria-hidden="true"><span style="width:${(n / end) * 100}%"></span></div>`;
+  }
+
+  // 唸到 n 了: 大字舞台顯示它, 或讓 n 的那張卡片亮起來 (只有有卡片的數字才會亮, 21~99 沒有卡片所以用舞台)
+  function highlightNumber(n, play) {
+    if (play.stage) return showStage(n, play.nums[play.nums.length - 1]);
+    clearActive();
+    const c = document.querySelector(`.num-card[data-n="${n}"]`);
+    if (!c) return;
+    c.classList.add('is-active');
+    c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // 結束 (唸完、被停止或被打斷): 按鈕復原; 卡片的亮起一律清掉, 舞台只有在被中斷時才收起來 (唸完就停在最後一個數字)
+  function endSequence(hideStage) {
+    playingId = '';
+    renderPlayButtons();
+    clearActive();
+    if (hideStage) stage.hidden = true;
+  }
+
+  async function playNumbers(id) {
+    const play = PLAYS[id];
+    const my = ++token;
+    clearActive();
+    stage.hidden = true;
+    playingId = id;
+    renderPlayButtons();
+    // 每 10 個數字唸一段: 一次唸太長的話, 有些語音 (例如 Chrome 的線上語音) 會在 15 秒左右被截斷
+    for (let s = 0; s < play.nums.length; s += 10) {
+      const chunk = play.nums.slice(s, s + 10);
+      const finished = await Speech.runList(chunk.map((k) => say(k).text), say(1).lang, {
+        rate: 0.8,
+        onItem: (i) => { if (my === token) highlightNumber(chunk[i], play); },
+      });
+      if (my !== token) return; // 被按鈕、卡片或切換語言打斷, 畫面由打斷的那一方收尾
+      if (!finished) { endSequence(true); return; } // 被小遊戲或影片之類的聲音打斷
+    }
+    endSequence(false);
+  }
+
+  playBtns.forEach((b) => b.addEventListener('click', () => {
+    if (playingId === b.dataset.play) { // 再按一次 = 停止
+      token++;
+      Speech.stop();
+      endSequence(true);
+      return;
+    }
+    playNumbers(b.dataset.play);
+  }));
+
   const checkZh = Speech.voiceNote($('.hero'), ['zh-tw', 'zh-cn'], '⚠️ 這台裝置找不到<b>中文語音</b>, 沒辦法唸出來。建議改用 Chrome、Edge 或 Safari 瀏覽器。');
   const checkEn = Speech.voiceNote($('.hero'), ['en'],
     '⚠️ 這台裝置找不到<b>英文語音</b>, 英文會唸得不標準。建議改用 Chrome 或 Edge 瀏覽器 (需要連上網路); ' +
@@ -86,6 +168,7 @@
       checkVoices();
       token++;
       Speech.stop();
+      endSequence(true);
       clearActive();
       document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
     });

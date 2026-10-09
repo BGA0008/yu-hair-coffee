@@ -138,7 +138,7 @@ h2 { font-size: 1.5rem; margin-bottom: 12px; }
 .top-item .n { font-size: .9rem; color: var(--accent); font-weight: 700; white-space: nowrap; }
 .top10-empty { padding: 12px 4px; color: var(--muted); }
 
-.toolbar { display: grid; gap: 12px; }
+.toolbar { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); } /* minmax(0,…) 才不會被下拉選單裡最長的選項撐寬 */
 .search input {
   width: 100%; min-height: 52px; padding: 0 18px;
   border: 3px solid var(--line); border-radius: 999px; background: #fff; font-size: 1.1rem;
@@ -237,6 +237,20 @@ h2 { font-size: 1.5rem; margin-bottom: 12px; }
 .num-grid.small .digit { font-size: 2.6rem; }
 .num-grid.small .zh { font-size: 1.35rem; }
 
+/* 每個區塊標題旁邊的「從頭唸到尾」按鈕 */
+.sec-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 12px; }
+.sec-head h2 { margin: 0; }
+
+/* 連續唸數字的大舞台 */
+.seq-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.stage { display: grid; justify-items: center; gap: 2px; margin-top: 14px; padding: 18px 12px 20px; text-align: center; background: var(--accent-soft); border: 4px solid var(--accent); border-radius: 28px; }
+.stage-num { font-size: clamp(5rem, 24vw, 9rem); line-height: 1; font-weight: 700; color: var(--accent); }
+.stage-zh { font-size: clamp(2rem, 8vw, 3rem); font-weight: 700; line-height: 1.2; }
+.stage-zy { color: var(--muted); letter-spacing: .08em; }
+.stage-en { font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 600; }
+.stage-bar { width: min(100%, 420px); height: 12px; margin-top: 12px; border-radius: 999px; background: #fff; overflow: hidden; }
+.stage-bar span { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .3s; }
+
 /* ---------- 影片 ---------- */
 .theater { margin-bottom: 16px; text-align: center; }
 .theater .frame { width: 100%; max-width: 860px; margin: 0 auto 10px; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #000; border: 4px solid var(--accent); }
@@ -261,6 +275,9 @@ h2 { font-size: 1.5rem; margin-bottom: 12px; }
 .add-video input { min-height: 46px; padding: 0 14px; border: 3px solid var(--line); border-radius: 14px; background: #fff; }
 .add-video input:focus { border-color: var(--accent); outline: none; }
 .add-video .btn { justify-self: start; }
+.voice-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.voice-row select { flex: 1 1 240px; min-width: 0; min-height: 48px; padding: 0 12px; border: 3px solid var(--line); border-radius: 14px; background: #fff; }
+.voice-row select:focus { border-color: var(--accent); outline: none; }
 .form-msg { min-height: 1.5em; color: var(--muted); font-size: .95rem; }
 
 /* ---------- 小遊戲 ---------- */

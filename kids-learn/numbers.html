@@ -24,6 +24,7 @@
       <button class="chip" type="button" data-lang="en" aria-pressed="false">English</button>
     </div>
     <div class="page-nav">
+      <a class="chip" href="#sequence">🎵 連續唸</a>
       <a class="chip" href="#ones">1 到 10</a>
       <a class="chip" href="#teens">11 到 20</a>
       <a class="chip" href="#tens">30 到 100</a>
@@ -32,18 +33,37 @@
     </div>
   </section>
 
+  <section id="sequence" aria-labelledby="seq-title">
+    <h2 id="seq-title">🎵 從 1 開始一路唸下去</h2>
+    <div class="seq-controls">
+      <button class="chip" type="button" data-play="top-10" data-label="從 1 唸到 10" aria-pressed="false">▶ 從 1 唸到 10</button>
+      <button class="chip" type="button" data-play="top-20" data-label="從 1 唸到 20" aria-pressed="false">▶ 從 1 唸到 20</button>
+      <button class="chip" type="button" data-play="top-100" data-label="從 1 唸到 100" aria-pressed="false">▶ 從 1 唸到 100</button>
+    </div>
+    <div id="stage" class="stage" hidden></div>
+  </section>
+
   <section id="ones" aria-labelledby="ones-title">
-    <h2 id="ones-title">1 到 10</h2>
+    <div class="sec-head">
+      <h2 id="ones-title">1 到 10</h2>
+      <button class="chip" type="button" data-play="ones" data-label="從 1 唸到 10" aria-pressed="false">▶ 從 1 唸到 10</button>
+    </div>
     <ul id="ones-list" class="num-grid"></ul>
   </section>
 
   <section id="teens" aria-labelledby="teens-title">
-    <h2 id="teens-title">11 到 20</h2>
+    <div class="sec-head">
+      <h2 id="teens-title">11 到 20</h2>
+      <button class="chip" type="button" data-play="teens" data-label="從 11 唸到 20" aria-pressed="false">▶ 從 11 唸到 20</button>
+    </div>
     <ul id="teens-list" class="num-grid small"></ul>
   </section>
 
   <section id="tens" aria-labelledby="tens-title">
-    <h2 id="tens-title">30 到 100 (一次數十個)</h2>
+    <div class="sec-head">
+      <h2 id="tens-title">30 到 100 (一次數十個)</h2>
+      <button class="chip" type="button" data-play="tens" data-label="從 30 唸到 100" aria-pressed="false">▶ 從 30 唸到 100</button>
+    </div>
     <ul id="tens-list" class="num-grid small"></ul>
   </section>
 
